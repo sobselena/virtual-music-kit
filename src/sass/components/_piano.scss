@@ -23,22 +23,12 @@
     overflow: hidden;
   }
 
-  &__settings {
-    border-top-left-radius: 1rem;
-    border-top-right-radius: 1rem;
-    background-color: #212529;
-    border: 2px solid #fff;
-    height: 14rem;
-    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.32);
-  }
-
   &__octave {
     display: flex;
     align-items: center;
     gap: 4px;
     position: relative;
     font-size: 2rem;
-    // width: min(5.8rem * 7 + 6 * 4px, 100%);
   }
 
   &__key-white {
