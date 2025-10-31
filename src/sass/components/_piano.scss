@@ -33,22 +33,34 @@
 
   &__key-white {
     display: flex;
+    perspective: 800px;
     align-items: end;
-
+    padding-bottom: 0.8rem;
     justify-content: center;
     background-color: #f1f3f5;
     height: 24rem;
     width: 5.8rem;
     border-bottom-right-radius: 5px;
     border-bottom-left-radius: 5px;
+    transition: all 0.05s ease-out;
+
     box-shadow: 0 0.8rem 1.2rem rgba(#212529, 0.1),
       inset -0.3rem -0.4rem 0.5rem rgba(#212529, 0.2),
       inset 0.3rem -0.4rem 0.5rem rgba(#212529, 0.2);
+
+    &:hover {
+      background-color: darken($color: #fff, $amount: 12%);
+    }
+    &:active {
+      background-color: darken($color: #fff, $amount: 18%);
+      transform-origin: center top;
+      transform: rotateX(-8deg);
+    }
   }
 
   &__key-black {
     @extend %key-black;
-
+    padding-top: 0.2rem;
     &[data-key^='c'] {
       left: calc(
         (100% - 4px * 6) / 7 + 2px - 10 / 100 * (100% - 4px * 6) / 7 * 0.55
@@ -74,6 +86,14 @@
         ((100% - 4px * 6) / 7) * 6 + 2px + 4px * 5 + 18 / 100 * (100% - 4px * 6) /
           7 * 0.56
       );
+    }
+    &:hover {
+      background-color: darken($color: #868e96, $amount: 32%);
+    }
+    &:active {
+      transform-origin: top center;
+      background-color: darken($color: #868e96, $amount: 36%);
+      transform: rotateX(-12deg) translateX(-50%);
     }
   }
 }

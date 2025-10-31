@@ -81,14 +81,28 @@ body {
 }
 .piano__key-white {
   display: flex;
+  perspective: 800px;
   align-items: end;
+  padding-bottom: 0.8rem;
   justify-content: center;
   background-color: #f1f3f5;
   height: 24rem;
   width: 5.8rem;
   border-bottom-right-radius: 5px;
   border-bottom-left-radius: 5px;
+  transition: all 0.05s ease-out;
   box-shadow: 0 0.8rem 1.2rem rgba(33, 37, 41, 0.1), inset -0.3rem -0.4rem 0.5rem rgba(33, 37, 41, 0.2), inset 0.3rem -0.4rem 0.5rem rgba(33, 37, 41, 0.2);
+}
+.piano__key-white:hover {
+  background-color: rgb(224.4, 224.4, 224.4);
+}
+.piano__key-white:active {
+  background-color: rgb(209.1, 209.1, 209.1);
+  transform-origin: center top;
+  transform: rotateX(-8deg);
+}
+.piano__key-black {
+  padding-top: 0.2rem;
 }
 .piano__key-black[data-key^=c] {
   left: calc((100% - 24px) / 7 + 2px - 0.1 * (100% - 24px) / 7 * 0.55);
@@ -104,6 +118,14 @@ body {
 }
 .piano__key-black[data-key^=a] {
   left: calc((100% - 24px) / 7 * 6 + 2px + 20px + 0.18 * (100% - 24px) / 7 * 0.56);
+}
+.piano__key-black:hover {
+  background-color: rgb(56.1238938053, 60.4, 64.6761061947);
+}
+.piano__key-black:active {
+  transform-origin: top center;
+  background-color: rgb(46.6460176991, 50.2, 53.7539823009);
+  transform: rotateX(-12deg) translateX(-50%);
 }
 
 .piano__scroller {
