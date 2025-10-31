@@ -93,15 +93,19 @@ body {
   margin: 0 auto;
   flex: 1;
 }
-.piano__keys {
-  padding-bottom: 3.2rem;
-  padding-left: 3.6rem;
-  padding-right: 3.6rem;
+.piano__container {
   background-color: #212529;
   border-bottom-left-radius: 1rem;
   border-bottom-right-radius: 1rem;
   border: 2px solid #fff;
   border-top: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3.6rem;
+  overflow: hidden;
+}
+.piano__keys {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -135,19 +139,42 @@ body {
   box-shadow: 0 0.8rem 1.2rem rgba(33, 37, 41, 0.1), inset -0.3rem -0.4rem 0.5rem rgba(33, 37, 41, 0.2), inset 0.3rem -0.4rem 0.5rem rgba(33, 37, 41, 0.2);
 }
 .piano__key-black[data-key^=c] {
-  left: calc(5.8rem + 2px - 0.32rem);
+  left: calc((100% - 24px) / 7 + 2px - 0.1 * (100% - 24px) / 7 * 0.55);
 }
 .piano__key-black[data-key^=d] {
-  left: calc(11.6rem + 4px + 2px + 0.32rem);
+  left: calc((100% - 24px) / 7 * 2 + 4px + 2px + 0.1 * (100% - 24px) / 7 * 0.55);
 }
 .piano__key-black[data-key^=f] {
-  left: calc(23.2rem + 2px + 12px - 0.576rem);
+  left: calc((100% - 24px) / 7 * 4 + 2px + 12px - 0.18 * (100% - 24px) / 7 * 0.56);
 }
 .piano__key-black[data-key^=g] {
-  left: calc(29rem + 2px + 16px);
+  left: calc((100% - 24px) / 7 * 5 + 2px + 16px);
 }
 .piano__key-black[data-key^=a] {
-  left: calc(34.8rem + 2px + 20px + 0.576rem);
+  left: calc((100% - 24px) / 7 * 6 + 2px + 20px + 0.18 * (100% - 24px) / 7 * 0.56);
+}
+
+.piano__scroller {
+  height: 8rem;
+  width: 100%;
+}
+.piano__scroller .piano__keys {
+  height: 100%;
+  border-top: 2px solid #fff;
+}
+.piano__scroller .piano__key-name {
+  display: none;
+}
+.piano__scroller .piano__octave {
+  height: 100%;
+  width: min(40.6rem + 24px, 33.3333333333%);
+}
+.piano__scroller .piano__key-white {
+  height: 100%;
+  width: calc((100% - 24px) / 7);
+}
+.piano__scroller .piano__key-black {
+  width: calc((100% - 24px) / 7 * 0.56);
 }
 
 .wrapper {

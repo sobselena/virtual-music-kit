@@ -1,0 +1,22 @@
+.piano__scroller {
+  height: 8rem;
+  width: 100%;
+  & .piano__keys {
+    height: 100%;
+    border-top: 2px solid #fff;
+  }
+  & .piano__key-name {
+    display: none;
+  }
+  & .piano__octave {
+    height: 100%;
+    width: min(5.8rem * 7 + 6 * 4px, 100% / 3);
+  }
+  & .piano__key-white {
+    height: 100%;
+    width: calc((100% - 4px * 6) / 7);
+  }
+  & .piano__key-black {
+    width: calc((100% - 4px * 6) / 7 * 0.56);
+  }
+}
