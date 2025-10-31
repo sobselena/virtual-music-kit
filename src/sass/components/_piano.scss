@@ -1,8 +1,13 @@
 .piano {
   box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.05);
+  width: 100%;
+  margin: 0 auto;
+  flex: 1;
 
   &__keys {
-    padding: 0 3.6rem 3.2rem 3.6rem;
+    padding-bottom: 3.2rem;
+    padding-left: 3.6rem;
+    padding-right: 3.6rem;
     background-color: #212529;
     border-bottom-left-radius: 1rem;
     border-bottom-right-radius: 1rem;
@@ -10,7 +15,9 @@
     border-top: none;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 4px;
+    overflow: hidden;
   }
 
   &__settings {
