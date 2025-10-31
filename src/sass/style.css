@@ -1,3 +1,19 @@
+.piano__key-black {
+  z-index: 999;
+  color: #fff;
+  position: absolute;
+  text-align: center;
+  width: 3.2rem;
+  height: 50%;
+  top: 0%;
+  transform: translateX(-50%);
+  font-weight: 500;
+  background: #343a40;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  box-shadow: 0 0.8rem 1.2rem rgba(0, 0, 0, 0.4), inset -0.4rem -0.4rem 0.8rem rgb(0, 0, 0), inset 0.4rem -0.4rem 0.8rem rgb(0, 0, 0);
+}
+
 *,
 *::after,
 *::before {
@@ -11,7 +27,7 @@ html {
 }
 
 body {
-  background-color: #222;
+  background-color: #212529;
 }
 
 /* oswald-300 - latin */
@@ -63,15 +79,72 @@ body {
   src: url("../../assets/fonts/mulish-v18-latin-regular.woff2") format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
 body {
-  color: #fff;
+  color: #222;
   font-family: "Oswald", "Mulish", sans-serif;
   font-size: 1.6rem;
   line-height: 1.8;
   font-weight: 400;
+  font-weight: 600;
+}
+
+.piano {
+  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.05);
+}
+.piano__keys {
+  padding: 0 3.6rem 3.2rem 3.6rem;
+  background-color: #212529;
+  border-bottom-left-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+  border: 2px solid #fff;
+  border-top: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.piano__settings {
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+  background-color: #212529;
+  border: 2px solid #fff;
+  height: 14rem;
+  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.32);
+}
+.piano__octave {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  position: relative;
+  font-size: 2rem;
+}
+.piano__key-white {
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  background-color: #f1f3f5;
+  height: 24rem;
+  width: 5.8rem;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+  box-shadow: 0 0.8rem 1.2rem rgba(33, 37, 41, 0.1), inset -0.3rem -0.4rem 0.5rem rgba(33, 37, 41, 0.2), inset 0.3rem -0.4rem 0.5rem rgba(33, 37, 41, 0.2);
+}
+.piano__key-black[data-key^=c] {
+  left: calc(5.8rem + 2px - 0.32rem);
+}
+.piano__key-black[data-key^=d] {
+  left: calc(11.6rem + 4px + 2px + 0.32rem);
+}
+.piano__key-black[data-key^=f] {
+  left: calc(23.2rem + 2px + 12px - 0.576rem);
+}
+.piano__key-black[data-key^=g] {
+  left: calc(29rem + 2px + 16px);
+}
+.piano__key-black[data-key^=a] {
+  left: calc(34.8rem + 2px + 20px + 0.576rem);
 }
 
 .wrapper {
-  width: 1440px;
+  max-width: 1440px;
   padding: 0 20px;
 }
 

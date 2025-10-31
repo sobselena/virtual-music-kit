@@ -1,0 +1,17 @@
+%key-black {
+  z-index: 999;
+  color: #fff;
+  position: absolute;
+  text-align: center;
+  width: 3.2rem;
+  height: 50%;
+  top: 0%;
+  transform: translateX(-50%);
+  font-weight: 500;
+  background: #343a40;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  box-shadow: 0 0.8rem 1.2rem rgba(0, 0, 0, 0.4),
+    inset -0.4rem -0.4rem 0.8rem rgba(0, 0, 0, 1),
+    inset 0.4rem -0.4rem 0.8rem rgba(0, 0, 0, 1);
+}
