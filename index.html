@@ -4,13 +4,35 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="src/sass/style.css" />
+    <link rel="icon" href="images/piano_24dp_000_FILL0_wght400_GRAD0_opsz24.png">
     <title>Piano</title>
   </head>
   <body>
     <main class="main">
       <div class="wrapper">
         <section class="piano">
-          <div class="piano__settings"></div>
+          <div class="piano__settings">
+            <div class="piano__current-key-container">
+              <div class="piano__current-key">Key:
+                <span class="piano__current-key-name">A3
+                </span>
+                |
+                <span class="piano__current-key-value">Q</span>
+              </div>
+              <button class="piano__edit-btn">
+              </button>
+            </div>
+            <div class="piano__combination">
+              <input type="text" class="piano__input" placeholder="QWERTY">
+              <button class="piano__play-btn">Play</button>
+            </div>
+            <div class="piano__show-keys">
+              <div class="piano__show-keys-switcher">
+                <div class="piano__show-keys-line"></div>
+              </div>
+              <span class="piano__show-keys-text">Show keys</span>
+            </div>
+          </div>
           <div class="piano__container">
             <div class="piano__keys">
               <div class="piano__octave">
