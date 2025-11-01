@@ -4,28 +4,55 @@
     border-top-right-radius: 1rem;
     background-color: #212529;
     border: 2px solid #fff;
-    height: 14rem;
+    padding-top: 4.6rem;
+    padding-bottom: 4.6rem;
     box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.32);
     color: #fff;
-
+    position: relative;
     display: flex;
     align-items: center;
+    gap: 2rem;
     justify-content: space-between;
-    padding-left: 3.6rem;
-    padding-right: 3.6rem;
+    padding-left: sizes(0.6rem, 3.6rem, 250px, 768px);
+    padding-right: sizes(0.6rem, 3.6rem, 250px, 768px);
     font-family: 'Aboreto', sans-serif;
     font-weight: 400;
+    @include resize(625px) {
+      gap: 3rem;
+    }
+    @include resize(400px) {
+      gap: 0;
+      flex-direction: column;
+      align-items: flex-start;
+    }
   }
   &__current-key {
-    font-size: 3.2rem;
+    font-size: sizes(1.8rem, 3.2rem, 200px, 1440px);
+    display: flex;
+    align-items: center;
+    column-gap: 1.6rem;
+    flex-wrap: nowrap;
+    @include resize(768px) {
+      column-gap: sizes(0.2rem, 1.6rem, 250px, 768px);
+    }
   }
   &__current-key-container {
     display: flex;
     align-items: center;
+    @include resize(400px) {
+      margin-left:  calc(45.6px / 5);
+    }
   }
   &__current-key-name {
     font-style: italic;
-    margin-left: 0.6rem;
+
+    margin-right: 1.2rem;
+  }
+  &__current-key-pair {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    flex-wrap: nowrap;
   }
   &__edit-btn {
     cursor: pointer;
@@ -34,14 +61,14 @@
     border: none;
     display: flex;
     align-items: center;
-    height: 3rem;
-    width: 3rem;
+    height: sizes(2.4rem, 3rem);
+    min-width: sizes(2.4rem, 3rem);
     transition: all 0.3s;
     background: url(../../../icons/feather.svg) no-repeat center center;
-    background-size: 3rem;
+    background-size: 100%;
     &:hover {
       background: url(../../../icons/feather-active.svg) no-repeat center center;
-      background-size: 3rem;
+      background-size: 100%;
       transform: translateY(-2px);
     }
     &:active {
@@ -50,24 +77,33 @@
   }
 
   &__current-key-value {
-    margin-right: 2.2rem;
+    margin-right: sizes(1.4rem, 2.2rem);
+    margin-left: 0.8rem;
   }
   &__combination {
     display: flex;
     align-items: center;
     gap: 1.2rem;
+    position: relative;
+            @include resize(400px) { 
+              order: -1;
+              margin-bottom: 1.8rem;
+
+            }
   }
   &__input {
+
     border-radius: 20rem;
     padding: 1.4rem 2.8rem;
     border: none;
-    width: 32rem;
+    max-width: 32rem;
+    width: 100%;
     background-color: #212529;
     border: 2px solid #fff;
     box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.4);
     font-family: inherit;
     color: #fff;
-    font-size: 2rem;
+    font-size: sizes(1.2rem, 2rem);
     transition: all 0.4s;
     &:focus {
       outline: none;
@@ -81,43 +117,70 @@
     border: none;
     color: inherit;
     font-family: inherit;
-    font-size: 2.2rem;
+    font-size: sizes(1.4rem, 2.2rem);
     cursor: pointer;
     transition: all 0.4s;
 
     &:hover {
       color: #ced4da;
     }
+
   }
 
   &__show-keys {
     display: flex;
     align-items: center;
     gap: 2.1rem;
-    font-size: 2.2rem;
-  }
-  &__input-range {
-    cursor: grab;
+    font-size: sizes(1.4rem, 2.2rem);
+    @include resize(915px) {
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.9rem;
+      transform: translateY(-6px);
+    }
+    @include resize(625px) {
+      position: absolute;
+      top: 1.7rem;
+      left: 0;
+      padding-left: sizes(0.6rem, 3.6rem, 250px, 768px);
+      align-items: flex-start;
+    }
+    @include resize(400px) {
+      position: static;
+      padding-left: 0;
+      order: -2;
+      margin-bottom: 0.8rem;
+      margin-left: calc(45.6px / 5);
+    }
   }
   &__show-keys-switcher {
-    width: 10.9rem;
-    height: 1.6rem;
-    transition: all 0.5s;
-  }
-  &__show-keys-switcher {
-    background-color: #fff;
-    height: 6px;
-    border-radius: 10px;
-    box-shadow: 0 1rem 2rem rgba($color: #000000, $alpha: 0.3);
+    width: sizes(3.2rem, 10.9rem, 768px, 1440px);
     position: relative;
     cursor: pointer;
     transition: all 0.4s;
     &:hover::before {
       background-color: #ced4da;
     }
+    @include resize(625px) { 
+      margin-left: 0.8rem;
+    }
   }
+  &__show-keys-line {
+    width: 100%;
+    height: 1.6rem;
+    background-color: #fff;
+    height: 6px;
+    border-radius: 10px;
+    box-shadow: 0 1rem 2rem rgba($color: #000000, $alpha: 0.3);
+    @include resize(768px) {
+      height: (4px, 6px, 625px, 768px);
+    }
+  }
+
   &__show-keys-text {
     transition: all 0.4s;
+    white-space: nowrap;
+
   }
 
   &__show-keys-switcher:hover + &__show-keys-text {
@@ -130,8 +193,8 @@
     top: 50%;
     transform: translate(-50%, -50%);
     height: 0;
-    height: 1.8rem;
-    width: 1.8rem;
+    height: sizes(1.4rem, 1.8rem, 625px, 1440px);
+    width: sizes(1.4rem, 1.8rem, 625px, 1440px);
     border-radius: 50%;
     background-color: #e9ecef;
   }

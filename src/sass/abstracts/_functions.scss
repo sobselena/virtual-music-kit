@@ -1,0 +1,7 @@
+@function sizes($min, $max, $min-vw: 320px, $max-vw: 1440px) {
+  $max-min-diff: $max - $min;
+  $size-diff: $max-vw - $min-vw;
+
+  @return clamp(#{$min}, calc(#{$min} + #{$max-min-diff} * calc((100vw - #{$min-vw}) / #{$size-diff})),
+    #{$max});
+}

@@ -1,16 +1,31 @@
 .piano__scroller {
   height: 8rem;
   width: 100%;
+
   & .piano__keys {
     height: 100%;
     border-top: 2px solid #fff;
+    pointer-events: none;
+    width: 100%;
   }
   & .piano__key-name {
     display: none;
   }
   & .piano__octave {
     height: 100%;
-    width: min(5.8rem * 7 + 6 * 4px, 100% / 3);
+    position: relative;
+
+  }
+  & .piano__octave:first-child::after {
+    content: '';
+    z-index: 1000;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 300%;
+    background-color: #dee2e6;
+    opacity: 0.2;
   }
   & .piano__key-white {
     height: 100%;
