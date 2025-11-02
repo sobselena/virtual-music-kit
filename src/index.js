@@ -1,6 +1,7 @@
 import {Component} from './js/Component';
 import {Button} from './js/Button';
 import { Key } from './js/Key';
+import { Input } from './js/Input';
 
 // Default piano keys
 
@@ -70,6 +71,9 @@ const key = (classes, keyValue, onClick) => {
 }
 const button = (classes, text, onClick) => {
   return new Button({classes, text, onClick});
+}
+const input = (classes, type, value) => {
+  return new Input({classes, type, value})
 }
 // Piano itself
 

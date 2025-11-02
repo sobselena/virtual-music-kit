@@ -1,16 +1,15 @@
 import { Component } from "Component";
 
 export class Input extends Component {
-  constructor({classes = [], type = 'text', value = ''}) {
+  constructor({classes = [], type = 'text'}) {
     super({tag: 'input', classes});
 
     this.setAttribute('type', type);
-    this.setAttribute('value', value)
   }
 
   setPlaceholder(placeholder) {
     this.setAttribute('placeholder', placeholder);
-    return this.currentNode();
+    return this;
   }
 
   getValue() {
@@ -18,6 +17,6 @@ export class Input extends Component {
   }
   setValue(value) {
     this.setAttribute('value', value)
-    return this.currentNode();
+    return this;
   }
 }
