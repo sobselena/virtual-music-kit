@@ -95,7 +95,36 @@ function createPianoContainer() {
   return div(['piano__container'], createPianoKeys(), createPianoScroller())
 }
 
+// Piano Settings
 
+//  Current Key Layout
+function createPianoCurrentKeyPair() {
+  return div(['piano__current-key-pair'], span(["piano__current-key-name"], 'A3'), span([], '|'), span(['piano__current-key-value'], 'Q'))
+}
+function createPianoCurrentKey() {
+  return div(['piano__current-key'], span(['piano__current-key-label'], 'Key:'), createPianoCurrentKeyPair())
+}
+
+function createPianoCurrentKeyContainer() {
+  return div(['piano__current-key-container'], createPianoCurrentKey(), button(['piano__edit-btn']))
+}
+
+// Piano Combination Layout
+function createPianoCombination() {
+  return div(['piano__combination'], input(['piano__input'], 'text').setPlaceholder(Object.keys(pianoKeys[0]).join('')), button(['piano__play-btn'], 'Play'))
+}
+
+// Piano Show Keys
+function createPianoShowKeysSwitcher() {
+  return div(['piano__show-keys-switcher'], div(['piano__show-keys-line']));
+}
+function createPianoShowKeys() {
+  return div(['piano__show-keys'], createPianoShowKeysSwitcher(), span(['piano__show-keys-text'], 'Show keys'))
+}
+// Overall Settings Layout
+function createPianoSettings() {
+  return div(['piano__settings' ], createPianoCurrentKeyContainer(),createPianoCombination(), createPianoShowKeys())
+}
 function createLayout() {
 
 }
