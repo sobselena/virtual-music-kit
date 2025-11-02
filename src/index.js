@@ -6,48 +6,48 @@ import { Input } from './js/Input';
 // Default piano keys
 
 const pianoKeys = [
-  {
-    'a3': 'q',
-    'a#3': '1',
-    'b3': 'w',
-    'c4': 'e',
-    'c#4': '2',
-    'd4': 'r',
-    'd#4': '3',
-    'e4': 't',
-    'f4': 'y',
-    'f#4': '4',
-    'g4': 'u',
-    'g#4': '5'
-  },
-  {
-    'a4': 'i',
-    'a#4': '6',
-    'b4': 'o',
-    'c5': 'p',
-    'c#5': '7',
-    'd5': 'a',
-    'd#5': '8',
-    'e5': 's',
-    'f5': 'd',
-    'f#5': '9',
-    'g5': 'f',
-    'g#5': '0'
-  },
-  {
-    'a5': 'g',
-    'a#5': 'c',
-    'b5': 'h',
-    'c6': 'j',
-    'c#6': 'v',
-    'd6': 'k',
-    'd#6': 'b',
-    'e6': 'l',
-    'f6': 'z',
-    'f#6': 'n',
-    'g6': 'x',
-    'g#6': 'm'
-  }
+  [
+    ['c3', 'q'],
+    ['d3', 'w'],
+    ['e3', 'e'],
+    ['f3', 'r'],
+    ['g3', 't'],
+    ['a3', 'y'],
+    ['b3', 'u'],
+    ['c#3', '1'],
+    ['d#3', '2'],
+    ['f#3', '3'],
+    ['g#3', '4'],
+    ['a#3', '5']
+  ],
+  [
+    ['c4', 'i'],
+    ['d4', 'o'],
+    ['e4', 'p'],
+    ['f4', 'a'],
+    ['g4', 's'],
+    ['a4', 'd'],
+    ['b4', 'f'],
+    ['c#4', '6'],
+    ['d#4', '7'],
+    ['f#4', '8'],
+    ['g#4', '9'],
+    ['a#4', '0']
+  ],
+  [
+    ['c5', 'g'],
+    ['d5', 'h'],
+    ['e5', 'j'],
+    ['f5', 'k'],
+    ['g5', 'l'],
+    ['a5', 'z'],
+    ['b5', 'x'],
+    ['c#5', 'c'],
+    ['d#5', 'v'],
+    ['f#5', 'b'],
+    ['g#5', 'n'],
+    ['a#5', 'm']
+  ]
 ];
 window.addEventListener('load', () => {
   createLayout();
@@ -78,7 +78,7 @@ const input = (classes, type, value) => {
 // Piano itself
 
 function createOctave(octaveKeys) {
-  return div(['piano__octave'], ...Object.entries(octaveKeys).map(([keyName, keyValue]) => {
+  return div(['piano__octave'], ...octaveKeys.map(([keyName, keyValue]) => {
     const keyColor = keyName.includes('#') ? ['piano__key-black'] : ['piano__key-white'];
     const pianoKey = key(keyColor, keyValue);
     pianoKey.setData(keyName);
@@ -111,7 +111,7 @@ function createPianoCurrentKeyContainer() {
 
 // Piano Combination Layout
 function createPianoCombination() {
-  return div(['piano__combination'], input(['piano__input'], 'text').setPlaceholder(Object.keys(pianoKeys[0]).join('')), button(['piano__play-btn'], 'Play'))
+  return div(['piano__combination'], input(['piano__input'], 'text').setPlaceholder(pianoKeys[0].filter(([keyName]) => !keyName.includes('#')).map(([, keyValue]) => keyValue).join('')), button(['piano__play-btn'], 'Play'))
 }
 
 // Piano Show Keys
@@ -125,6 +125,10 @@ function createPianoShowKeys() {
 function createPianoSettings() {
   return div(['piano__settings' ], createPianoCurrentKeyContainer(),createPianoCombination(), createPianoShowKeys())
 }
-function createLayout() {
-
+// Overall Layout
+function createPianoSection() {
+  return section(['piano'], createPianoSettings(), createPianoContainer())
+}
+function createMainLayout() {
+  return main(['main'], div(['wrapper'], createPianoSection()));
 }
