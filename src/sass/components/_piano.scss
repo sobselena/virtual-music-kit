@@ -53,7 +53,7 @@
     &:hover {
       background-color: darken($color: #fff, $amount: 12%);
     }
-    &:active {
+    &.active {
       background-color: darken($color: #fff, $amount: 18%);
       transform-origin: center top;
       transform: rotateX(-8deg);
@@ -92,7 +92,7 @@
     &:hover {
       background-color: darken($color: #868e96, $amount: 32%);
     }
-    &:active {
+    &.active {
       transform-origin: top center;
       background-color: darken($color: #868e96, $amount: 36%);
       transform: rotateX(-12deg) translateX(-50%);

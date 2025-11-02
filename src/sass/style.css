@@ -103,7 +103,7 @@ body {
 .piano__key-white:hover {
   background-color: rgb(224.4, 224.4, 224.4);
 }
-.piano__key-white:active {
+.piano__key-white.active {
   background-color: rgb(209.1, 209.1, 209.1);
   transform-origin: center top;
   transform: rotateX(-8deg);
@@ -129,7 +129,7 @@ body {
 .piano__key-black:hover {
   background-color: rgb(56.1238938053, 60.4, 64.6761061947);
 }
-.piano__key-black:active {
+.piano__key-black.active {
   transform-origin: top center;
   background-color: rgb(46.6460176991, 50.2, 53.7539823009);
   transform: rotateX(-12deg) translateX(-50%);

@@ -2,10 +2,10 @@ import {Component} from './js/Component.js';
 import {Button} from './js/Button.js';
 import { Key } from './js/Key.js';
 import { Input } from './js/Input.js';
-
+import { PianoKeys } from './js/PianoKeys.js';
 // Default piano keys
 
-const pianoKeys = [
+const pianoKeysPairs = [
   [
     ['c3', 'q'],
     ['d3', 'w'],
@@ -49,7 +49,36 @@ const pianoKeys = [
     ['a#5', 'm']
   ]
 ];
-window.addEventListener('load', () => {
+const pianoKeyObj = pianoKeysPairs.flat().reduce((acc, [keyName, keyValue]) => {
+  acc[keyName] = keyValue
+  return acc;
+}, {});
+const keyNames = Object.keys(pianoKeyObj);
+
+let getPianoKeys;
+let getPianoKeysScroller;
+
+const ctx  = new AudioContext();
+const loadedAudio = {};
+async function fetchSound(keyName) {
+  try {
+  const data = await fetch(`audio/${keyName.replace('#', '-')}.mp3`);
+  if (!data.ok) throw new Error('File not found');
+  const arrayBuffer = await data.arrayBuffer();
+  const decodedAudio = await ctx.decodeAudioData(arrayBuffer);
+  loadedAudio[keyName] = decodedAudio;
+  } catch(err) {
+    console.error(`Failed to decode ${keyName}.mp3:`, err);
+  }
+}
+
+async function fetchAudio(audioArr) {
+  await Promise.all(audioArr.map(keyName => fetchSound(keyName)));
+}
+
+
+window.addEventListener('load', async () => {
+  await fetchAudio(keyNames);
   showLayout();
 });
 
@@ -60,16 +89,27 @@ const main = (classes, ...children) => {
 const section = (classes, ...children) => {
   return new Component({tag: 'section', classes}, ...children)
 }
+const pianoKeys = (...children) => {
+  return new PianoKeys( ...children)
+}
 const div = (classes, ...children) => {
   return new Component({tag: 'div', classes}, ...children);
 }
+
 const span = (classes, text) => {
   return new Component({tag: 'span', text, classes});
 }
-const key = (classes, keyValue, onClick) => {
-  return new Key({classes, text: keyValue, onClick})
+
+function clickPianoKey(keyName) {
+  const playSound = ctx.createBufferSource();
+  playSound.buffer = loadedAudio[keyName];
+  playSound.connect(ctx.destination);
+  playSound.start();
 }
-const button = (classes, text, onClick) => {
+const key = (classes, keyName) => {
+  return new Key({classes, text: pianoKeyObj[keyName]})
+}
+const button = (classes, text, onClick ) => {
   return new Button({classes, text, onClick});
 }
 const input = (classes, type, value) => {
@@ -77,23 +117,35 @@ const input = (classes, type, value) => {
 }
 // Piano itself
 
+function clickPianoKeys(event) {
+  const activeKey = event.target.closest('.piano__key-white, .piano__key-black')
+  if (activeKey) {
+      const pianoKeyValue = activeKey.querySelector('.piano__key-name').textContent;
+    getPianoKeys.toggleActive(pianoKeyValue);
+    getPianoKeysScroller.toggleActive(pianoKeyValue);
+    clickPianoKey(activeKey.getAttribute('data-key'));
+  }
+}
 function createOctave(octaveKeys) {
-  return div(['piano__octave'], ...octaveKeys.map(([keyName, keyValue]) => {
+  return div(['piano__octave'], ...octaveKeys.map(([keyName]) => {
     const keyColor = keyName.includes('#') ? ['piano__key-black'] : ['piano__key-white'];
-    const pianoKey = key(keyColor, keyValue);
+    const pianoKey = key(keyColor, keyName);
     pianoKey.setData(keyName);
     return pianoKey;
   }))
 }
-function createPianoKeys() {
-  return div(['piano__keys'], ...pianoKeys.map(octaveKeys => createOctave(octaveKeys)))
+
+
+function createPianoContainer() {
+  getPianoKeys = pianoKeys(...pianoKeysPairs.map(octaveKeys => createOctave(octaveKeys)));
+  getPianoKeys.addEvent('click', clickPianoKeys);
+  return div(['piano__container'], getPianoKeys, createPianoScroller())
 }
 function createPianoScroller() {
-  return div(['piano__scroller'], createPianoKeys());
+  getPianoKeysScroller = pianoKeys( ...pianoKeysPairs.map(octaveKeys => createOctave(octaveKeys)))
+  return div(['piano__scroller'], getPianoKeysScroller);
 }
-function createPianoContainer() {
-  return div(['piano__container'], createPianoKeys(), createPianoScroller())
-}
+
 
 // Piano Settings
 
@@ -111,7 +163,7 @@ function createPianoCurrentKeyContainer() {
 
 // Piano Combination Layout
 function createPianoCombination() {
-  return div(['piano__combination'], input(['piano__input'], 'text').setPlaceholder(pianoKeys[0].filter(([keyName]) => !keyName.includes('#')).map(([, keyValue]) => keyValue).join('')), button(['piano__play-btn'], 'Play'))
+  return div(['piano__combination'], input(['piano__input'], 'text').setPlaceholder(pianoKeysPairs[0].filter(([keyName]) => !keyName.includes('#')).map(([, keyValue]) => keyValue).join('')), button(['piano__play-btn'], 'Play'))
 }
 
 // Piano Show Keys
@@ -136,3 +188,18 @@ function createMainLayout() {
 function showLayout() {
   document.body.append(createMainLayout().currentNode());
 }
+
+// Add events for Piano Keys
+
+document.addEventListener('keydown', (event) => {
+  let curKey = event.code;
+  if (!curKey.includes('Digit') && !curKey.includes('Key')) return;
+  curKey = curKey?.at(-1).toLowerCase();
+  const keyName = Object.keys(pianoKeyObj).find(pianoKeyName =>pianoKeyObj[pianoKeyName] === curKey);
+  if (keyName) {
+    console.log(getPianoKeys.getActiveKeys(curKey))
+    getPianoKeys.toggleActive(curKey);
+    getPianoKeysScroller.toggleActive(curKey);
+    clickPianoKey(keyName)
+  };
+});

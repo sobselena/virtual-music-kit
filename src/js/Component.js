@@ -1,5 +1,6 @@
 export class Component {
   #node = null;
+  #children = [];
   constructor({tag = 'div', classes = [], text = ''}, ...children) {
     const node = document.createElement(tag);
     if (classes.length > 0) {
@@ -14,10 +15,14 @@ export class Component {
 
   appendChildren(children) {
     children.forEach(child => {
+      this.#children.push(child);
       this.#node.append(child.currentNode());
     });
   }
+  getChildren() {
+    return this.#children;
 
+  }
   currentNode() {
     return this.#node;
   }
@@ -33,4 +38,5 @@ export class Component {
   setAttribute(attributeName, attributeValue) {
     this.#node.setAttribute(attributeName, attributeValue);
   }
+
 }
