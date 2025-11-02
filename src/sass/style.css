@@ -76,7 +76,7 @@ body {
   justify-content: center;
   gap: 4px;
   overflow: hidden;
-  width: calc(3 * min(40.6rem + 24px, 100%));
+  width: calc(3 * min(40.6rem + 24px + 0.3rem, 100%));
 }
 .piano__octave {
   display: flex;

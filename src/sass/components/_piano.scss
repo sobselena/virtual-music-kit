@@ -21,7 +21,7 @@
     justify-content: center;
     gap: 4px;
     overflow: hidden;
-        width: calc(3 * min((5.8rem * 7 + 4px * 6), 100%));
+        width: calc(3 * min((5.8rem * 7 + 4px * 6 + 0.3rem), 100%));
   }
 
   &__octave {

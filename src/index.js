@@ -117,15 +117,14 @@ const input = (classes, type, value) => {
 }
 // Piano itself
 
-function clickPianoKeys(event) {
+function clickPianoKeys(event, handlerName = 'pressDown') {
   const activeKey = event.target.closest('.piano__key-white, .piano__key-black')
   if (activeKey) {
       const pianoKeyValue = activeKey.querySelector('.piano__key-name').textContent;
-    getPianoKeys.toggleActive(pianoKeyValue);
-    getPianoKeysScroller.toggleActive(pianoKeyValue);
-    clickPianoKey(activeKey.getAttribute('data-key'));
+      changeKeyStage(pianoKeyValue, activeKey.getAttribute('data-key'), handlerName);
   }
 }
+
 function createOctave(octaveKeys) {
   return div(['piano__octave'], ...octaveKeys.map(([keyName]) => {
     const keyColor = keyName.includes('#') ? ['piano__key-black'] : ['piano__key-white'];
@@ -138,7 +137,6 @@ function createOctave(octaveKeys) {
 
 function createPianoContainer() {
   getPianoKeys = pianoKeys(...pianoKeysPairs.map(octaveKeys => createOctave(octaveKeys)));
-  getPianoKeys.addEvent('click', clickPianoKeys);
   return div(['piano__container'], getPianoKeys, createPianoScroller())
 }
 function createPianoScroller() {
@@ -190,16 +188,33 @@ function showLayout() {
 }
 
 // Add events for Piano Keys
-
-document.addEventListener('keydown', (event) => {
-  let curKey = event.code;
-  if (!curKey.includes('Digit') && !curKey.includes('Key')) return;
-  curKey = curKey?.at(-1).toLowerCase();
-  const keyName = Object.keys(pianoKeyObj).find(pianoKeyName =>pianoKeyObj[pianoKeyName] === curKey);
-  if (keyName) {
-    console.log(getPianoKeys.getActiveKeys(curKey))
-    getPianoKeys.toggleActive(curKey);
-    getPianoKeysScroller.toggleActive(curKey);
+const curPressedKeys = [];
+function changeKeyStage(key, keyName, handlerName) {
+    getPianoKeys[handlerName](key);
+  getPianoKeysScroller[handlerName](key);
+  if (handlerName === 'pressDown') {
     clickPianoKey(keyName)
-  };
+  }
+}
+function handleKeyUpDown(key, handlerName) {
+  console.log(key)
+  if (!key.includes('Digit') && !key.includes('Key')) return;
+  key = key?.at(-1).toLowerCase();
+  const keyName = Object.keys(pianoKeyObj).find(pianoKeyName =>pianoKeyObj[pianoKeyName] === key);
+  if (!keyName) return;
+  changeKeyStage(key, keyName, handlerName);
+}
+document.addEventListener('keydown', (event) => {
+  let keyDown = event.code;
+  handleKeyUpDown(keyDown, 'pressDown')
 });
+
+
+document.addEventListener('keyup', (event) => {
+  let keyUp = event.code;
+  handleKeyUpDown(keyUp, 'pressUp');
+})
+
+document.addEventListener('mousedown', (event) => clickPianoKeys( event, 'pressDown'));
+document.addEventListener('mouseup', (event) => clickPianoKeys(event, 'pressUp'));
+document.addEventListener('mouseleave', (event) => clickPianoKeys(event, 'pressUp'));
