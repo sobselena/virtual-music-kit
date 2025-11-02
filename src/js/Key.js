@@ -1,4 +1,4 @@
-import { Component } from "Component";
+import { Component } from "./Component.js";
 
 export class Key extends Component {
   constructor({classes, text : keyName, onClick}) {

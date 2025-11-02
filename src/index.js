@@ -1,7 +1,7 @@
-import {Component} from './js/Component';
-import {Button} from './js/Button';
-import { Key } from './js/Key';
-import { Input } from './js/Input';
+import {Component} from './js/Component.js';
+import {Button} from './js/Button.js';
+import { Key } from './js/Key.js';
+import { Input } from './js/Input.js';
 
 // Default piano keys
 
@@ -50,7 +50,7 @@ const pianoKeys = [
   ]
 ];
 window.addEventListener('load', () => {
-  createLayout();
+  showLayout();
 });
 
 // Basic Components
@@ -131,4 +131,8 @@ function createPianoSection() {
 }
 function createMainLayout() {
   return main(['main'], div(['wrapper'], createPianoSection()));
+}
+
+function showLayout() {
+  document.body.append(createMainLayout().currentNode());
 }

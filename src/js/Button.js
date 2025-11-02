@@ -1,4 +1,4 @@
-import { Component } from "Component";
+import { Component } from "./Component.js";
 
 export class Button extends Component {
   constructor({classes, text = '', onClick}) {
