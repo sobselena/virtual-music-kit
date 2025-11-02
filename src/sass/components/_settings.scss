@@ -161,7 +161,7 @@
     &:hover::before {
       background-color: #ced4da;
     }
-    @include resize(625px) { 
+    @include resize(625px) {
       margin-left: 0.8rem;
     }
   }
