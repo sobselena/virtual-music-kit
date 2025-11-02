@@ -79,7 +79,9 @@ async function fetchAudio(audioArr) {
 
 window.addEventListener('load', async () => {
   await fetchAudio(keyNames);
+
   showLayout();
+    calcScale();
 });
 
 // Basic Components
@@ -118,6 +120,7 @@ const input = (classes, type, value) => {
 // Piano itself
 
 function clickPianoKeys(event, handlerName = 'pressDown') {
+  if (!(event.target instanceof Element)) return;
   const activeKey = event.target.closest('.piano__key-white, .piano__key-black')
   if (activeKey) {
       const pianoKeyValue = activeKey.querySelector('.piano__key-name').textContent;
@@ -125,13 +128,14 @@ function clickPianoKeys(event, handlerName = 'pressDown') {
   }
 }
 
-function createOctave(octaveKeys) {
-  return div(['piano__octave'], ...octaveKeys.map(([keyName]) => {
+function createOctave(octaveKeys, isFirst = false) {
+  const keysArr = octaveKeys.map(([keyName]) => {
     const keyColor = keyName.includes('#') ? ['piano__key-black'] : ['piano__key-white'];
     const pianoKey = key(keyColor, keyName);
     pianoKey.setData(keyName);
     return pianoKey;
-  }))
+  });
+  return isFirst ? div(['piano__octave'], div(['piano__octave-overlay']), div(['piano__octave-scroller']), ...keysArr) : div(['piano__octave'], ...keysArr);
 }
 
 
@@ -140,7 +144,7 @@ function createPianoContainer() {
   return div(['piano__container'], getPianoKeys, createPianoScroller())
 }
 function createPianoScroller() {
-  getPianoKeysScroller = pianoKeys( ...pianoKeysPairs.map(octaveKeys => createOctave(octaveKeys)))
+  getPianoKeysScroller = pianoKeys( ...pianoKeysPairs.map((octaveKeys, index) => createOctave(octaveKeys, index === 0)))
   return div(['piano__scroller'], getPianoKeysScroller);
 }
 
@@ -204,6 +208,7 @@ function handleKeyUpDown(key, handlerName) {
   if (!keyName) return;
   changeKeyStage(key, keyName, handlerName);
 }
+
 document.addEventListener('keydown', (event) => {
   let keyDown = event.code;
   handleKeyUpDown(keyDown, 'pressDown')
@@ -218,3 +223,21 @@ document.addEventListener('keyup', (event) => {
 document.addEventListener('mousedown', (event) => clickPianoKeys( event, 'pressDown'));
 document.addEventListener('mouseup', (event) => clickPianoKeys(event, 'pressUp'));
 document.addEventListener('mouseleave', (event) => clickPianoKeys(event, 'pressUp'));
+
+// Resize range
+function calcScale() {
+  const scale = 3 * Math.min(document.querySelector('.piano').getBoundingClientRect().width / getPianoKeys.currentNode().getBoundingClientRect().width, 1);
+  getPianoKeysScroller.currentNode().querySelector('.piano__octave-scroller').style.transform = `scale(${scale})`;
+}
+window.addEventListener('resize', calcScale)
+
+document.querySelector('piano__scroller').addEventListener('touchstart', () => {
+  
+})
+document.querySelector('piano__scroller').addEventListener('touchstart', () => {
+
+})
+document.querySelector('piano__scroller').addEventListener('touchstart', () => {
+
+})
+
