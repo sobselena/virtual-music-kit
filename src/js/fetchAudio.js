@@ -43,10 +43,6 @@ export const pianoKeysPairs = [
   ]
 ];
 
-export const pianoKeyObj = pianoKeysPairs.flat().reduce((acc, [keyName, keyValue]) => {
-  acc[keyName] = keyValue
-  return acc;
-}, {});
 export const ctx  = new AudioContext();
 export const loadedAudio = {};
 

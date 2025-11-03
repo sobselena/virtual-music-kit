@@ -20,7 +20,7 @@
     @include resize(625px) {
       gap: 3rem;
     }
-    @include resize(400px) {
+    @include resize(480px) {
       gap: 0;
       flex-direction: column;
       align-items: flex-start;
@@ -36,12 +36,37 @@
       column-gap: sizes(0.2rem, 1.6rem, 250px, 768px);
     }
   }
+  &__current-key-value-input {
+    background-color: transparent;
+    border: 2px solid #fff;
+    height: 4.2rem;
+    width: 4.2rem;
+    border-radius: 1.2rem;
+    display: none;
+    font-family: inherit;
+    font-size: sizes(1.8rem, 3.2rem, 200px, 1440px);;
+    color: #fff;
+    text-align: center;
+  }
+
+  &__current-key-value-input:focus {
+      outline: none;
+  }
   &__current-key-container {
     display: flex;
-    align-items: center;
-    @include resize(400px) {
+    align-items: flex-start;
+    flex-direction: column;
+    @include resize(480px) {
       margin-left:  calc(45.6px / 5);
     }
+  }
+  &__current-key-overall-container {
+    display: flex;
+    align-items: center;
+  }
+  &__current-key-value-error {
+    font-size: sizes(1.2rem, 1.6rem);
+    display: none;
   }
   &__current-key-name {
     font-style: italic;
@@ -76,20 +101,34 @@
     }
   }
 
-  &__current-key-value {
+  &__current-key-value-container {
     margin-right: sizes(1.4rem, 2.2rem);
     margin-left: 0.8rem;
+    display: flex;
+    align-items: center;
+    column-gap: 1.6rem;
+    // &.edit .piano__current-key-value{
+    //   display: none;
+    // }
+    &.edit .piano__current-key-value-input {
+      display: inline-block;
+    }
+
+    @include resize(915px) {
+      &.edit .piano__current-key-value{
+        display: none;
+      }
+    }
   }
   &__combination {
     display: flex;
     align-items: center;
     gap: 1.2rem;
     position: relative;
-            @include resize(400px) { 
-              order: -1;
-              margin-bottom: 1.8rem;
-
-            }
+    @include resize(480px) {
+      order: -1;
+      margin-bottom: 1.8rem;
+    }
   }
   &__input {
 
@@ -145,7 +184,7 @@
       padding-left: sizes(0.6rem, 3.6rem, 250px, 768px);
       align-items: flex-start;
     }
-    @include resize(400px) {
+    @include resize(480px) {
       position: static;
       padding-left: 0;
       order: -2;

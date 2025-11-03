@@ -18,7 +18,7 @@
   }
   & .piano__octave-overlay {
     content: '';
-    z-index: 10000;
+    z-index: 1000;
     pointer-events: auto;
     position: absolute;
     cursor: grab;
@@ -37,7 +37,7 @@
     top: 0;
     left: 100%;
     height: 100%;
-    width: calc(100% + 0.3rem );
+    width: calc(100% + 0.6rem );
     background-color: #212529;
     box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.15);
     opacity: 0.42;

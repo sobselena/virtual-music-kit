@@ -4,16 +4,24 @@ import { Key } from './js/Key.js';
 import { Input } from './js/Input.js';
 import { PianoKeys } from './js/PianoKeys.js';
 // Fetch audio
-import {pianoKeyObj, fetchAudio, pianoKeysPairs} from './js/fetchAudio.js';
+import {fetchAudio, pianoKeysPairs} from './js/fetchAudio.js';
 // Default piano keys
 
 
+
+function createPianoKeyObj() {
+  return pianoKeysPairs.flat().reduce((acc, [keyName, keyValue]) => {
+  acc[keyName] = keyValue
+  return acc;
+}, {});
+}
+export let pianoKeyObj = createPianoKeyObj();
 const keyNames = Object.keys(pianoKeyObj);
 
 let getPianoKeys;
 let getPianoKeysScroller;
-
-
+export let getKeyValueContainer;
+let getEditInput;
 
 window.addEventListener('load', async () => {
   await fetchAudio(keyNames);
@@ -34,6 +42,9 @@ const pianoKeys = (...children) => {
 }
 const div = (classes, ...children) => {
   return new Component({tag: 'div', classes}, ...children);
+}
+const p = (classes, text) => {
+  return new Component({tag: 'p', text, classes});
 }
 
 const span = (classes, text) => {
@@ -75,7 +86,12 @@ function createOctave(octaveKeys, isFirst = false) {
 
 function createPianoContainer() {
   getPianoKeys = pianoKeys(...pianoKeysPairs.map(octaveKeys => createOctave(octaveKeys)));
-  return div(['piano__container'], getPianoKeys, createPianoScroller())
+  getPianoKeys.addEvent('keydown', (event) => {
+    if (event.key === 'Enter') {
+      clickEditBtn();
+    }
+  })
+  return div(['piano__container'], getPianoKeys, createPianoScroller(), div(['piano__container-overlay']))
 }
 function createPianoScroller() {
   getPianoKeysScroller = pianoKeys( ...pianoKeysPairs.map((octaveKeys, index) => createOctave(octaveKeys, index === 0)))
@@ -87,14 +103,50 @@ function createPianoScroller() {
 
 //  Current Key Layout
 function createPianoCurrentKeyPair() {
-  return div(['piano__current-key-pair'], span(["piano__current-key-name"], 'A3'), span([], '|'), span(['piano__current-key-value'], 'Q'))
+  getEditInput = input(['piano__current-key-value-input']);
+  getEditInput.setAttribute('maxlength', 1);
+  getKeyValueContainer = div(['piano__current-key-value-container'], span(['piano__current-key-value'], '?'), getEditInput);
+  return div(['piano__current-key-pair'], span(["piano__current-key-name"], '?'), span(["piano__current-key-vl"], '|'),  getKeyValueContainer)
 }
 function createPianoCurrentKey() {
   return div(['piano__current-key'], span(['piano__current-key-label'], 'Key:'), createPianoCurrentKeyPair())
 }
 
+function findOctaveKeyIndex(key) {
+  const overallIndex = pianoKeysPairs.flat().findIndex(([keyName]) => keyName === key);
+  const octaveIndex = Math.floor((overallIndex) / pianoKeysPairs[0].length)
+  const relativeIndex = overallIndex % pianoKeysPairs[0].length;
+  return [octaveIndex, relativeIndex];
+}
+function clickEditBtn() {
+  if (document.querySelector(".piano__current-key-value").textContent === '?') return;
+  const editInputValue = document.querySelector('.piano__current-key-value-input').value.toLowerCase();
+  const canSwap = Object.keys(pianoKeyObj).find(key => pianoKeyObj[key] === editInputValue);
+  const curKey = document.querySelector('.piano__current-key-name').textContent;
+  if (!(/[0-9a-z]/.test(editInputValue)) && getKeyValueContainer.currentNode().classList.contains('edit')) {
+    document.querySelector(".piano__current-key-value-error").style.display = 'block';
+    return;
+  }
+  const [octaveIndexCur, relativeIndexCur] = findOctaveKeyIndex(curKey);
+
+  if (canSwap) {
+    const [octaveIndexSwap, relativeIndexSwap] = findOctaveKeyIndex(canSwap);
+    const temp = pianoKeysPairs[octaveIndexCur][relativeIndexCur][1];
+    pianoKeysPairs[octaveIndexCur][relativeIndexCur][1] = editInputValue;
+    pianoKeysPairs[octaveIndexSwap][relativeIndexSwap][1] = temp;
+
+    document.querySelector(`.piano__key-white[data-key='${canSwap}'] .piano__key-name, .piano__key-black[data-key='${canSwap}'] .piano__key-name`).textContent = pianoKeysPairs[octaveIndexSwap][relativeIndexSwap][1];
+  } else {
+    pianoKeysPairs[octaveIndexCur][relativeIndexCur][1] = editInputValue;
+  }
+  document.querySelector(`.piano__key-white[data-key='${curKey}'] .piano__key-name, .piano__key-black[data-key='${curKey}'] .piano__key-name`).textContent = pianoKeysPairs[octaveIndexCur][relativeIndexCur][1];
+  pianoKeyObj = createPianoKeyObj();
+  getKeyValueContainer.currentNode().classList.toggle('edit');
+  document.querySelector('.piano__container').classList.toggle('blocked');
+}
+
 function createPianoCurrentKeyContainer() {
-  return div(['piano__current-key-container'], createPianoCurrentKey(), button(['piano__edit-btn']))
+  return div(['piano__current-key-container'], div(['piano__current-key-overall-container'], createPianoCurrentKey(), button(['piano__edit-btn'], '', clickEditBtn)), p(['piano__current-key-value-error'], 'You shall not pass!'));
 }
 
 // Piano Combination Layout
@@ -134,7 +186,7 @@ function changeKeyStage(key, keyName, handlerName) {
 function handleKeyUpDown(key, handlerName) {
   if (!key.includes('Digit') && !key.includes('Key')) return;
   key = key?.at(-1).toLowerCase();
-  const keyName = Object.keys(pianoKeyObj).find(pianoKeyName =>pianoKeyObj[pianoKeyName] === key);;
+  const keyName = Object.keys(pianoKeyObj).find(pianoKeyName =>pianoKeyObj[pianoKeyName] === key);
   if (!keyName) return;
   changeKeyStage(key, keyName, handlerName);
 }
@@ -211,3 +263,4 @@ const media = window.matchMedia('(hover:hover) and (pointer:fine)');
 media.addEventListener('change', () => {
   calcScale();
 })
+

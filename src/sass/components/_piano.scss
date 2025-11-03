@@ -3,6 +3,18 @@
   width: 100%;
   margin: 0 auto;
   flex: 1;
+  &__container-overlay {
+    z-index: 1000;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #091929;
+    opacity: 0.5;
+    display: none;
+    cursor: not-allowed;
+  }
   &__container {
     background-color: #212529;
     border-bottom-left-radius: 1rem;
@@ -14,7 +26,12 @@
     align-items: center;
     gap: 3.6rem;
     overflow: hidden;
+    position: relative;
+    &.blocked .piano__container-overlay {
+      display: block;
+    }
   }
+
   &__keys {
     display: flex;
     align-items: center;

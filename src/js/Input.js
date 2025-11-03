@@ -15,8 +15,4 @@ export class Input extends Component {
   getValue() {
     return this.currentNode().value;
   }
-  setValue(value) {
-    this.setAttribute('value', value)
-    return this;
-  }
 }

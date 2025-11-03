@@ -58,6 +58,18 @@ body {
   margin: 0 auto;
   flex: 1;
 }
+.piano__container-overlay {
+  z-index: 1000;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #091929;
+  opacity: 0.5;
+  display: none;
+  cursor: not-allowed;
+}
 .piano__container {
   background-color: #212529;
   border-bottom-left-radius: 1rem;
@@ -69,6 +81,10 @@ body {
   align-items: center;
   gap: 3.6rem;
   overflow: hidden;
+  position: relative;
+}
+.piano__container.blocked .piano__container-overlay {
+  display: block;
 }
 .piano__keys {
   display: flex;
@@ -154,7 +170,7 @@ body {
 }
 .piano__scroller .piano__octave-overlay {
   content: "";
-  z-index: 10000;
+  z-index: 1000;
   pointer-events: auto;
   position: absolute;
   cursor: grab;
@@ -173,7 +189,7 @@ body {
   top: 0;
   left: 100%;
   height: 100%;
-  width: calc(100% + 0.3rem);
+  width: calc(100% + 0.6rem);
   background-color: #212529;
   box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.15);
   opacity: 0.42;
@@ -212,7 +228,7 @@ body {
     gap: 3rem;
   }
 }
-@media (max-width: 400px) {
+@media (max-width: 480px) {
   .piano__settings {
     gap: 0;
     flex-direction: column;
@@ -231,14 +247,38 @@ body {
     column-gap: clamp(0.2rem, 0.2rem + 1.4rem * (100vw - 250px) / 518px, 1.6rem);
   }
 }
+.piano__current-key-value-input {
+  background-color: transparent;
+  border: 2px solid #fff;
+  height: 4.2rem;
+  width: 4.2rem;
+  border-radius: 1.2rem;
+  display: none;
+  font-family: inherit;
+  font-size: clamp(1.8rem, 1.8rem + 1.4rem * (100vw - 200px) / 1240px, 3.2rem);
+  color: #fff;
+  text-align: center;
+}
+.piano__current-key-value-input:focus {
+  outline: none;
+}
 .piano__current-key-container {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  flex-direction: column;
 }
-@media (max-width: 400px) {
+@media (max-width: 480px) {
   .piano__current-key-container {
     margin-left: 9.12px;
   }
+}
+.piano__current-key-overall-container {
+  display: flex;
+  align-items: center;
+}
+.piano__current-key-value-error {
+  font-size: clamp(1.2rem, 1.2rem + 0.4rem * (100vw - 320px) / 1120px, 1.6rem);
+  display: none;
 }
 .piano__current-key-name {
   font-style: italic;
@@ -271,9 +311,20 @@ body {
 .piano__edit-btn:active {
   transform: translateY(2px);
 }
-.piano__current-key-value {
+.piano__current-key-value-container {
   margin-right: clamp(1.4rem, 1.4rem + 0.8rem * (100vw - 320px) / 1120px, 2.2rem);
   margin-left: 0.8rem;
+  display: flex;
+  align-items: center;
+  column-gap: 1.6rem;
+}
+.piano__current-key-value-container.edit .piano__current-key-value-input {
+  display: inline-block;
+}
+@media (max-width: 915px) {
+  .piano__current-key-value-container.edit .piano__current-key-value {
+    display: none;
+  }
 }
 .piano__combination {
   display: flex;
@@ -281,7 +332,7 @@ body {
   gap: 1.2rem;
   position: relative;
 }
-@media (max-width: 400px) {
+@media (max-width: 480px) {
   .piano__combination {
     order: -1;
     margin-bottom: 1.8rem;
@@ -342,7 +393,7 @@ body {
     align-items: flex-start;
   }
 }
-@media (max-width: 400px) {
+@media (max-width: 480px) {
   .piano__show-keys {
     position: static;
     padding-left: 0;
