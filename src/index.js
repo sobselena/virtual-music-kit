@@ -28,6 +28,7 @@ window.addEventListener('load', async () => {
   showLayout();
   initScroller();
   calcScale();
+
 });
 
 // Basic Components
@@ -86,7 +87,7 @@ function createOctave(octaveKeys, isFirst = false) {
 
 function createPianoContainer() {
   getPianoKeys = pianoKeys(...pianoKeysPairs.map(octaveKeys => createOctave(octaveKeys)));
-  getPianoKeys.addEvent('keydown', (event) => {
+  getEditInput.addEvent('keydown', (event) => {
     if (event.key === 'Enter') {
       clickEditBtn();
     }
@@ -150,6 +151,9 @@ function createPianoCurrentKeyContainer() {
 }
 
 // Piano Combination Layout
+function playCombination() {
+
+}
 function createPianoCombination() {
   return div(['piano__combination'], input(['piano__input'], 'text').setPlaceholder(pianoKeysPairs[0].filter(([keyName]) => !keyName.includes('#')).map(([, keyValue]) => keyValue).join('')), button(['piano__play-btn'], 'Play'))
 }
@@ -175,6 +179,7 @@ function createMainLayout() {
 
 function showLayout() {
   document.body.append(createMainLayout().currentNode());
+  document.querySelectorAll('.piano__key-white, .piano__key-black').forEach(keyEl => keyEl.addEventListener('mouseleave', (event) => clickPianoKeys(event, 'pressUp')));
 }
 
 // Add events for Piano Keys
@@ -204,7 +209,7 @@ document.addEventListener('keyup', (event) => {
 
 document.addEventListener('mousedown', (event) => clickPianoKeys( event, 'pressDown'));
 document.addEventListener('mouseup', (event) => clickPianoKeys(event, 'pressUp'));
-document.addEventListener('mouseleave', (event) => clickPianoKeys(event, 'pressUp'));
+
 
 // Resize range
 const coords = {curTransform: 0, isScrolling: false}
