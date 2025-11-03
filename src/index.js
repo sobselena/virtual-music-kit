@@ -182,6 +182,7 @@ function createPianoCombination() {
       playCombination();
     }
   getEditInput.setAttribute('pattern', '[a-zA-Z0-9]');
+  getCombinationInput.setAttribute('maxlength', Object.values(pianoKeyObj).filter(value => value).length * 2);
   })
   return div(['piano__combination'], getCombinationInput , button(['piano__play-btn'], 'Play', playCombination))
 }

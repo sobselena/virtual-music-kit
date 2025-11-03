@@ -48,7 +48,7 @@ export const loadedAudio = {};
 
 export async function fetchSound(keyName) {
   try {
-  const data = await fetch(`audio/${keyName.replace('#', '-')}.mp3`);
+  const data = await fetch(`assets/audio/${keyName.replace('#', '-')}.mp3`);
   if (!data.ok) throw new Error('File not found');
   const arrayBuffer = await data.arrayBuffer();
   const decodedAudio = await ctx.decodeAudioData(arrayBuffer);

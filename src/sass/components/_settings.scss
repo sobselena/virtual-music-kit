@@ -89,10 +89,10 @@
     height: sizes(2.4rem, 3rem);
     min-width: sizes(2.4rem, 3rem);
     transition: all 0.3s;
-    background: url(../../../icons/feather.svg) no-repeat center center;
+    background: url("../assets/icons/feather.svg") no-repeat center center;
     background-size: 100%;
     &:hover {
-      background: url(../../../icons/feather-active.svg) no-repeat center center;
+      background: url("../assets/icons/feather-active.svg") no-repeat center center;
       background-size: 100%;
       transform: translateY(-2px);
     }

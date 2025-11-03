@@ -13,8 +13,6 @@ export class PianoKeys extends Component {
     return Array.from( this.currentNode().querySelectorAll(`.piano__key-name`)).filter(spanEl => spanEl.textContent === keyValue).map(span => span.closest('.piano__key-white, .piano__key-black'));
   }
   pressDown(keyValue) {
-
-    console.log(this.#pressed.at(-1), keyValue)
     if (this.#pressed.at(-1) !== keyValue) {
       this.#pressed.push(keyValue);
       if (this.#pressed.length === 1) {
