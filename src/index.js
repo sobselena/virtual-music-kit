@@ -20,8 +20,10 @@ const keyNames = Object.keys(pianoKeyObj);
 
 let getPianoKeys;
 let getPianoKeysScroller;
-export let getKeyValueContainer;
 let getEditInput;
+let getPlayCombinationInput;
+export let getKeyValueContainer;
+
 
 window.addEventListener('load', async () => {
   await fetchAudio(keyNames);
@@ -87,11 +89,8 @@ function createOctave(octaveKeys, isFirst = false) {
 
 function createPianoContainer() {
   getPianoKeys = pianoKeys(...pianoKeysPairs.map(octaveKeys => createOctave(octaveKeys)));
-  getEditInput.addEvent('keydown', (event) => {
-    if (event.key === 'Enter') {
-      clickEditBtn();
-    }
-  })
+
+  getPianoKeys.currentNode().querySelectorAll('.piano__key-white, .piano__key-black').forEach(keyEl => keyEl.addEventListener('mouseleave', (event) => clickPianoKeys(event, 'pressUp')));
   return div(['piano__container'], getPianoKeys, createPianoScroller(), div(['piano__container-overlay']))
 }
 function createPianoScroller() {
@@ -106,6 +105,11 @@ function createPianoScroller() {
 function createPianoCurrentKeyPair() {
   getEditInput = input(['piano__current-key-value-input']);
   getEditInput.setAttribute('maxlength', 1);
+  getEditInput.addEvent('keydown', (event) => {
+    if (event.key === 'Enter') {
+      clickEditBtn();
+    }
+  })
   getKeyValueContainer = div(['piano__current-key-value-container'], span(['piano__current-key-value'], '?'), getEditInput);
   return div(['piano__current-key-pair'], span(["piano__current-key-name"], '?'), span(["piano__current-key-vl"], '|'),  getKeyValueContainer)
 }
@@ -136,12 +140,13 @@ function clickEditBtn() {
     pianoKeysPairs[octaveIndexCur][relativeIndexCur][1] = editInputValue;
     pianoKeysPairs[octaveIndexSwap][relativeIndexSwap][1] = temp;
 
-    document.querySelector(`.piano__key-white[data-key='${canSwap}'] .piano__key-name, .piano__key-black[data-key='${canSwap}'] .piano__key-name`).textContent = pianoKeysPairs[octaveIndexSwap][relativeIndexSwap][1];
+    document.querySelectorAll(`.piano__key-white[data-key='${canSwap}'] .piano__key-name, .piano__key-black[data-key='${canSwap}'] .piano__key-name`).forEach(el => el.textContent = pianoKeysPairs[octaveIndexSwap][relativeIndexSwap][1]);
   } else {
     pianoKeysPairs[octaveIndexCur][relativeIndexCur][1] = editInputValue;
   }
-  document.querySelector(`.piano__key-white[data-key='${curKey}'] .piano__key-name, .piano__key-black[data-key='${curKey}'] .piano__key-name`).textContent = pianoKeysPairs[octaveIndexCur][relativeIndexCur][1];
+  document.querySelectorAll(`.piano__key-white[data-key='${curKey}'] .piano__key-name, .piano__key-black[data-key='${curKey}'] .piano__key-name`).forEach(el => el.textContent = pianoKeysPairs[octaveIndexCur][relativeIndexCur][1]);
   pianoKeyObj = createPianoKeyObj();
+  document.querySelector('.piano__current-key-value').textContent = pianoKeysPairs[octaveIndexCur][relativeIndexCur][1];
   getKeyValueContainer.currentNode().classList.toggle('edit');
   document.querySelector('.piano__container').classList.toggle('blocked');
 }
@@ -155,7 +160,13 @@ function playCombination() {
 
 }
 function createPianoCombination() {
-  return div(['piano__combination'], input(['piano__input'], 'text').setPlaceholder(pianoKeysPairs[0].filter(([keyName]) => !keyName.includes('#')).map(([, keyValue]) => keyValue).join('')), button(['piano__play-btn'], 'Play'))
+  getPlayCombinationInput = input(['piano__input'], 'text').setPlaceholder(pianoKeysPairs[0].filter(([keyName]) => !keyName.includes('#')).map(([, keyValue]) => keyValue).join(''));
+  getPlayCombinationInput.addEvent('keydown', (event) => {
+    if (event.key === 'Enter') {
+      playCombination();
+    }
+  })
+  return div(['piano__combination'], getPlayCombinationInput , button(['piano__play-btn'], 'Play', playCombination))
 }
 
 // Piano Show Keys
@@ -167,7 +178,9 @@ function createPianoShowKeys() {
 }
 // Overall Settings Layout
 function createPianoSettings() {
-  return div(['piano__settings' ], createPianoCurrentKeyContainer(),createPianoCombination(), createPianoShowKeys())
+  const pianoSettings = div(['piano__settings' ], createPianoCurrentKeyContainer(),createPianoCombination(), createPianoShowKeys())
+
+  return pianoSettings;
 }
 // Overall Layout
 function createPianoSection() {
@@ -179,12 +192,12 @@ function createMainLayout() {
 
 function showLayout() {
   document.body.append(createMainLayout().currentNode());
-  document.querySelectorAll('.piano__key-white, .piano__key-black').forEach(keyEl => keyEl.addEventListener('mouseleave', (event) => clickPianoKeys(event, 'pressUp')));
+
 }
 
 // Add events for Piano Keys
 function changeKeyStage(key, keyName, handlerName) {
-    getPianoKeys[handlerName](key);
+  getPianoKeys[handlerName](key);
   getPianoKeysScroller[handlerName](key);
 
 }
