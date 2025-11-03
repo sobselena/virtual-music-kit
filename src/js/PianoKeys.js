@@ -35,9 +35,9 @@ export class PianoKeys extends Component {
       this.clickPianoKey();
      }
   }
-  clickPianoKey() {
+  clickPianoKey(combinationKey) {
       if (getKeyValueContainer.currentNode().classList.contains('edit')) return;
-      const keyValue = this.getFirstPressedKey();
+      const keyValue = combinationKey || this.getFirstPressedKey();
       const keyName =  Object.keys(pianoKeyObj).find(pianoKeyName =>pianoKeyObj[pianoKeyName] === keyValue);
       if (!keyValue) return;
       if (this.#playSound) {
@@ -50,7 +50,7 @@ export class PianoKeys extends Component {
       document.querySelector('.piano__current-key-name').textContent = keyName;
       document.querySelector('.piano__current-key-vl').textContent = '|';
       document.querySelector('.piano__current-key-value').textContent = keyValue;
-      
+
       const editInput = getKeyValueContainer.getChildren()[1];
       editInput.setPlaceholder(keyValue);
       editInput.currentNode().value = keyValue;
@@ -60,6 +60,11 @@ export class PianoKeys extends Component {
       playSound.buffer = loadedAudio[keyName];
       playSound.connect(ctx.destination);
       playSound.start();
+      if (combinationKey) {
+        playSound.onended = () => {
+          this.pressUp(keyValue)
+        }
+      }
   }
 
   getFirstPressedKey() {

@@ -21,7 +21,7 @@ const keyNames = Object.keys(pianoKeyObj);
 let getPianoKeys;
 let getPianoKeysScroller;
 let getEditInput;
-let getPlayCombinationInput;
+let getCombinationInput;;
 export let getKeyValueContainer;
 
 
@@ -105,6 +105,7 @@ function createPianoScroller() {
 function createPianoCurrentKeyPair() {
   getEditInput = input(['piano__current-key-value-input']);
   getEditInput.setAttribute('maxlength', 1);
+  getEditInput.setAttribute('pattern', '[a-zA-Z0-9]');
   getEditInput.addEvent('keydown', (event) => {
     if (event.key === 'Enter') {
       clickEditBtn();
@@ -128,7 +129,7 @@ function clickEditBtn() {
   const editInputValue = document.querySelector('.piano__current-key-value-input').value.toLowerCase();
   const canSwap = Object.keys(pianoKeyObj).find(key => pianoKeyObj[key] === editInputValue);
   const curKey = document.querySelector('.piano__current-key-name').textContent;
-  if (!(/[0-9a-z]/.test(editInputValue)) && getKeyValueContainer.currentNode().classList.contains('edit')) {
+  if (!(/[0-9a-z]/.test(editInputValue) ) && getKeyValueContainer.currentNode().classList.contains('edit')) {
     document.querySelector(".piano__current-key-value-error").style.display = 'block';
     return;
   }
@@ -148,6 +149,8 @@ function clickEditBtn() {
   pianoKeyObj = createPianoKeyObj();
   document.querySelector('.piano__current-key-value').textContent = pianoKeysPairs[octaveIndexCur][relativeIndexCur][1];
   getKeyValueContainer.currentNode().classList.toggle('edit');
+  if (combinationIsPlaying) return;
+  
   document.querySelector('.piano__container').classList.toggle('blocked');
 }
 
@@ -156,17 +159,31 @@ function createPianoCurrentKeyContainer() {
 }
 
 // Piano Combination Layout
-function playCombination() {
-
+function delay(time) {
+  return new Promise((resolve) => setTimeout(resolve, time))
+}
+let combinationIsPlaying = false;
+async function playCombination() {
+  const combination = getCombinationInput.currentNode().value.split('');
+  document.querySelector('.piano__container').classList.add('blocked');
+  combinationIsPlaying = true;
+  for (const key of combination) {
+    getPianoKeys.clickPianoKey(key);
+    await delay(300);
+  }
+  combinationIsPlaying = false;
+  if (getKeyValueContainer.currentNode().classList.contains('edit')) return;
+  document.querySelector('.piano__container').classList.remove('blocked');
 }
 function createPianoCombination() {
-  getPlayCombinationInput = input(['piano__input'], 'text').setPlaceholder(pianoKeysPairs[0].filter(([keyName]) => !keyName.includes('#')).map(([, keyValue]) => keyValue).join(''));
-  getPlayCombinationInput.addEvent('keydown', (event) => {
+  getCombinationInput = input(['piano__input'], 'text').setPlaceholder(pianoKeysPairs[0].filter(([keyName]) => !keyName.includes('#')).map(([, keyValue]) => keyValue).join(''));
+  getCombinationInput.addEvent('keydown', (event) => {
     if (event.key === 'Enter') {
       playCombination();
     }
+  getEditInput.setAttribute('pattern', '[a-zA-Z0-9]');
   })
-  return div(['piano__combination'], getPlayCombinationInput , button(['piano__play-btn'], 'Play', playCombination))
+  return div(['piano__combination'], getCombinationInput , button(['piano__play-btn'], 'Play', playCombination))
 }
 
 // Piano Show Keys
