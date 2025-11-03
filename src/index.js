@@ -3,87 +3,23 @@ import {Button} from './js/Button.js';
 import { Key } from './js/Key.js';
 import { Input } from './js/Input.js';
 import { PianoKeys } from './js/PianoKeys.js';
+// Fetch audio
+import {pianoKeyObj, fetchAudio, pianoKeysPairs} from './js/fetchAudio.js';
 // Default piano keys
 
-const pianoKeysPairs = [
-  [
-    ['c3', 'q'],
-    ['d3', 'w'],
-    ['e3', 'e'],
-    ['f3', 'r'],
-    ['g3', 't'],
-    ['a3', 'y'],
-    ['b3', 'u'],
-    ['c#3', '1'],
-    ['d#3', '2'],
-    ['f#3', '3'],
-    ['g#3', '4'],
-    ['a#3', '5']
-  ],
-  [
-    ['c4', 'i'],
-    ['d4', 'o'],
-    ['e4', 'p'],
-    ['f4', 'a'],
-    ['g4', 's'],
-    ['a4', 'd'],
-    ['b4', 'f'],
-    ['c#4', '6'],
-    ['d#4', '7'],
-    ['f#4', '8'],
-    ['g#4', '9'],
-    ['a#4', '0']
-  ],
-  [
-    ['c5', 'g'],
-    ['d5', 'h'],
-    ['e5', 'j'],
-    ['f5', 'k'],
-    ['g5', 'l'],
-    ['a5', 'z'],
-    ['b5', 'x'],
-    ['c#5', 'c'],
-    ['d#5', 'v'],
-    ['f#5', 'b'],
-    ['g#5', 'n'],
-    ['a#5', 'm']
-  ]
-];
-const pianoKeyObj = pianoKeysPairs.flat().reduce((acc, [keyName, keyValue]) => {
-  acc[keyName] = keyValue
-  return acc;
-}, {});
+
 const keyNames = Object.keys(pianoKeyObj);
 
 let getPianoKeys;
 let getPianoKeysScroller;
 
-const ctx  = new AudioContext();
-const loadedAudio = {};
-async function fetchSound(keyName) {
-  try {
-  const data = await fetch(`audio/${keyName.replace('#', '-')}.mp3`);
-  if (!data.ok) throw new Error('File not found');
-  const arrayBuffer = await data.arrayBuffer();
-  const decodedAudio = await ctx.decodeAudioData(arrayBuffer);
-  loadedAudio[keyName] = decodedAudio;
-  } catch(err) {
-    console.error(`Failed to decode ${keyName}.mp3:`, err);
-  }
-}
-
-async function fetchAudio(audioArr) {
-  await Promise.all(audioArr.map(keyName => fetchSound(keyName)));
-}
 
 
 window.addEventListener('load', async () => {
   await fetchAudio(keyNames);
-
   showLayout();
-      initScroller();
-    calcScale();
-
+  initScroller();
+  calcScale();
 });
 
 // Basic Components
@@ -104,12 +40,8 @@ const span = (classes, text) => {
   return new Component({tag: 'span', text, classes});
 }
 
-function clickPianoKey(keyName) {
-  const playSound = ctx.createBufferSource();
-  playSound.buffer = loadedAudio[keyName];
-  playSound.connect(ctx.destination);
-  playSound.start();
-}
+
+
 const key = (classes, keyName) => {
   return new Key({classes, text: pianoKeyObj[keyName]})
 }
@@ -194,19 +126,15 @@ function showLayout() {
 }
 
 // Add events for Piano Keys
-const curPressedKeys = [];
 function changeKeyStage(key, keyName, handlerName) {
     getPianoKeys[handlerName](key);
   getPianoKeysScroller[handlerName](key);
-  if (handlerName === 'pressDown') {
-    clickPianoKey(keyName)
-  }
+
 }
 function handleKeyUpDown(key, handlerName) {
-  console.log(key)
   if (!key.includes('Digit') && !key.includes('Key')) return;
   key = key?.at(-1).toLowerCase();
-  const keyName = Object.keys(pianoKeyObj).find(pianoKeyName =>pianoKeyObj[pianoKeyName] === key);
+  const keyName = Object.keys(pianoKeyObj).find(pianoKeyName =>pianoKeyObj[pianoKeyName] === key);;
   if (!keyName) return;
   changeKeyStage(key, keyName, handlerName);
 }
@@ -229,36 +157,48 @@ document.addEventListener('mouseleave', (event) => clickPianoKeys(event, 'pressU
 // Resize range
 const coords = {curTransform: 0, isScrolling: false}
 let scale;
-function calcScale() {
-  scale = 3 * Math.min(document.querySelector('.piano').getBoundingClientRect().width / getPianoKeys.currentNode().getBoundingClientRect().width, 1);
-  getPianoKeysScroller.currentNode().querySelector('.piano__octave-scroller').style.transform = `translateX(${coords.curTransform}px) scaleX(${scale})`;
 
+function calcScale() {
+  const piano = document.querySelector('.piano');
+  const scroller = getPianoKeysScroller.currentNode().querySelector('.piano__octave-scroller');
+  scale = 3 * Math.min(piano.getBoundingClientRect().width / getPianoKeys.currentNode().getBoundingClientRect().width, 1);
+  scroller.style.transform = `translateX(${coords.curTransform}px) scaleX(${scale})`;
 }
+
 window.addEventListener('resize', calcScale)
 
 function initScroller() {
+  const overlay = document.querySelector('.piano__octave-overlay');
+  const scroller = document.querySelector('.piano__octave-scroller');
 
-  document.querySelector('.piano__octave-overlay').addEventListener('pointerdown', (event) => {
+  overlay.addEventListener('pointerdown', (event) => {
     coords.x1 = event.clientX;
     coords.x2 = event.clientX;
     coords.isScrolling = true
-  })
-  document.querySelector('.piano__octave-overlay').addEventListener('pointermove', (event) => {
+  });
+
+  overlay.addEventListener('pointermove', (event) => {
     if (!coords.isScrolling) return;
     coords.x2 = event.clientX;
-  })
-    document.querySelector('.piano__octave-overlay').addEventListener('pointerup', () => {
+  });
+
+  overlay.addEventListener('pointerup', () => {
     coords.isScrolling = false
-  })
-  document.querySelector('.piano__octave-overlay').addEventListener('pointerleave', () => {
+  });
+
+  overlay.addEventListener('pointerleave', () => {
     coords.isScrolling = false
-  })
+  });
+
   function animate() {
     if (coords.isScrolling) {
-      const maxValue = (document.querySelector('.piano__octave-overlay').getBoundingClientRect().width - document.querySelector('.piano__octave-scroller').getBoundingClientRect().width)/ 2 + 3;
+      const maxValue = (overlay.getBoundingClientRect().width - scroller.getBoundingClientRect().width)/ 2 + 3;
+
       coords.curTransform = Math.min(Math.max(-maxValue, coords.curTransform + (coords.x2 - coords.x1) * 1),  maxValue);
-      document.querySelector('.piano__octave-scroller').style.transform = `translateX(${coords.curTransform}px) scaleX(${scale})`;
-      getPianoKeys.currentNode().style.transform = `translateX(${-coords.curTransform * document.querySelector('.piano__octave-overlay').getBoundingClientRect().width / document.querySelector('.piano__octave-scroller').getBoundingClientRect().width}px)`;
+
+      scroller.style.transform = `translateX(${coords.curTransform}px) scaleX(${scale})`;
+
+      getPianoKeys.currentNode().style.transform = `translateX(${-coords.curTransform * overlay.getBoundingClientRect().width / scroller.getBoundingClientRect().width}px)`;
       coords.x1 = coords.x2;
     }
 

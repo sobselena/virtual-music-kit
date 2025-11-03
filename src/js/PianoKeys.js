@@ -1,6 +1,9 @@
 import { Component } from "./Component.js";
-
+import { ctx, loadedAudio, pianoKeyObj } from "./fetchAudio.js";
 export class PianoKeys extends Component {
+  pressed = [];
+  isPlaying = false;
+  playSound;
   constructor(...children) {
     super({tag: 'div', classes: ['piano__keys']}, ...children);
   }
@@ -11,9 +14,42 @@ export class PianoKeys extends Component {
     return Array.from( this.currentNode().querySelectorAll(`.piano__key-name`)).filter(spanEl => spanEl.textContent === keyValue).map(span => span.closest('.piano__key-white, .piano__key-black'));
   }
   pressDown(keyValue) {
-    this.getActiveKeys(keyValue).forEach(keyEl => keyEl.classList.add('active'));
+
+    console.log(this.pressed.at(-1), keyValue)
+    if (this.pressed.at(-1) !== keyValue) {
+      this.pressed.push(keyValue);
+      if (this.pressed.length === 1) {
+        this.clickPianoKey();
+      }
+    }
+
+
   }
+
   pressUp(keyValue) {
     this.getActiveKeys(keyValue).forEach(keyEl => keyEl.classList.remove('active'));
+    const keyIndex = this.pressed.findIndex((value) => keyValue === value);
+     this.pressed.splice(keyIndex, 1);
+     if (keyIndex === 0 && this.pressed.length > 0) {
+      this.isPlaying = false;
+      this.clickPianoKey();
+     }
   }
+  clickPianoKey() {
+      const keyValue = this.pressed[0]
+      const keyName =  Object.keys(pianoKeyObj).find(pianoKeyName =>pianoKeyObj[pianoKeyName] === keyValue);
+      if (!keyValue) return;
+      if (this.playSound) {
+        this.playSound.stop();
+        this.playSound = null;
+      }
+      this.isPlaying = true;
+      this.getActiveKeys(keyValue).forEach(keyEl => keyEl.classList.add('active'));
+      const playSound = ctx.createBufferSource();
+      this.playSound = playSound;
+      playSound.buffer = loadedAudio[keyName];
+      playSound.connect(ctx.destination);
+      playSound.start();
+  }
+
 }
