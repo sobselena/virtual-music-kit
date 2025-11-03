@@ -5,8 +5,8 @@
   & .piano__keys {
     height: 100%;
     border-top: 2px solid #fff;
-    pointer-events: none;
     width: 100%;
+    position: relative;
   }
   & .piano__key-name {
     display: none;
@@ -18,17 +18,20 @@
   }
   & .piano__octave-overlay {
     content: '';
-    z-index: 1000;
+    z-index: 10000;
+    pointer-events: auto;
     position: absolute;
+    cursor: grab;
     top: 0;
     left: 0;
     height: 100%;
     width: calc(300% + 0.6rem);
-    background-color: #dee2e6;
+    background-color: #091929;
     opacity: 0.2;
   }
     & .piano__octave-scroller {
     content: '';
+    cursor: grab;
     z-index: 999;
     position: absolute;
     top: 0;

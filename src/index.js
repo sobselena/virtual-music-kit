@@ -81,7 +81,9 @@ window.addEventListener('load', async () => {
   await fetchAudio(keyNames);
 
   showLayout();
+      initScroller();
     calcScale();
+
 });
 
 // Basic Components
@@ -225,19 +227,47 @@ document.addEventListener('mouseup', (event) => clickPianoKeys(event, 'pressUp')
 document.addEventListener('mouseleave', (event) => clickPianoKeys(event, 'pressUp'));
 
 // Resize range
+const coords = {curTransform: 0, isScrolling: false}
+let scale;
 function calcScale() {
-  const scale = 3 * Math.min(document.querySelector('.piano').getBoundingClientRect().width / getPianoKeys.currentNode().getBoundingClientRect().width, 1);
-  getPianoKeysScroller.currentNode().querySelector('.piano__octave-scroller').style.transform = `scale(${scale})`;
+  scale = 3 * Math.min(document.querySelector('.piano').getBoundingClientRect().width / getPianoKeys.currentNode().getBoundingClientRect().width, 1);
+  getPianoKeysScroller.currentNode().querySelector('.piano__octave-scroller').style.transform = `translateX(${coords.curTransform}px) scaleX(${scale})`;
+
 }
 window.addEventListener('resize', calcScale)
 
-document.querySelector('piano__scroller').addEventListener('touchstart', () => {
-  
-})
-document.querySelector('piano__scroller').addEventListener('touchstart', () => {
+function initScroller() {
 
-})
-document.querySelector('piano__scroller').addEventListener('touchstart', () => {
+  document.querySelector('.piano__octave-overlay').addEventListener('pointerdown', (event) => {
+    coords.x1 = event.clientX;
+    coords.x2 = event.clientX;
+    coords.isScrolling = true
+  })
+  document.querySelector('.piano__octave-overlay').addEventListener('pointermove', (event) => {
+    if (!coords.isScrolling) return;
+    coords.x2 = event.clientX;
+  })
+    document.querySelector('.piano__octave-overlay').addEventListener('pointerup', () => {
+    coords.isScrolling = false
+  })
+  document.querySelector('.piano__octave-overlay').addEventListener('pointerleave', () => {
+    coords.isScrolling = false
+  })
+  function animate() {
+    if (coords.isScrolling) {
+      const maxValue = (document.querySelector('.piano__octave-overlay').getBoundingClientRect().width - document.querySelector('.piano__octave-scroller').getBoundingClientRect().width)/ 2 + 3;
+      coords.curTransform = Math.min(Math.max(-maxValue, coords.curTransform + (coords.x2 - coords.x1) * 1),  maxValue);
+      document.querySelector('.piano__octave-scroller').style.transform = `translateX(${coords.curTransform}px) scaleX(${scale})`;
+      getPianoKeys.currentNode().style.transform = `translateX(${-coords.curTransform * document.querySelector('.piano__octave-overlay').getBoundingClientRect().width / document.querySelector('.piano__octave-scroller').getBoundingClientRect().width}px)`;
+      coords.x1 = coords.x2;
+    }
 
-})
+    requestAnimationFrame(animate)
+  }
+  animate();
+}
 
+const media = window.matchMedia('(hover:hover) and (pointer:fine)');
+media.addEventListener('change', () => {
+  calcScale();
+})
