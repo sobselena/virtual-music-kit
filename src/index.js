@@ -188,6 +188,7 @@ function createPianoCombination() {
     if (event.key === 'Enter') {
       playCombination();
     }
+  })
 
   getCombinationInput.setAttribute('maxlength', Object.values(pianoKeyObj).filter(value => value).length * 2);
   getCombinationInput.addEvent('blur', () => {
@@ -205,8 +206,6 @@ function createPianoCombination() {
         document.querySelector('.piano__container').classList.remove('blocked');
       }
     }
-  })
-
   })
   return div(['piano__combination'], getCombinationInput , button(['piano__play-btn'], 'Play', playCombination))
 }
