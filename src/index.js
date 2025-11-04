@@ -196,9 +196,9 @@ function toggleShowKeys() {
 }
 
 function createPianoShowKeysSwitcher() {
-  getShowKeysLine = div(['piano__show-keys-line']);
+  getShowKeysLine = div(['piano__show-keys-switcher'], div(['piano__show-keys-line']));
   getShowKeysLine.addEvent('click', toggleShowKeys);
-  return div(['piano__show-keys-switcher'], getShowKeysLine);
+  return getShowKeysLine;
 }
 function createPianoShowKeys() {
   return div(['piano__show-keys'], createPianoShowKeysSwitcher(), span(['piano__show-keys-text'], 'Show keys'))
