@@ -18,6 +18,7 @@ function createPianoKeyObj() {
 export let pianoKeyObj = createPianoKeyObj();
 const keyNames = Object.keys(pianoKeyObj);
 
+let getShowKeysLine;
 let getPianoKeys;
 let getPianoKeysScroller;
 let getEditInput;
@@ -188,8 +189,16 @@ function createPianoCombination() {
 }
 
 // Piano Show Keys
+function toggleShowKeys() {
+  console.log(getPianoKeys.currentNode())
+  getPianoKeys.currentNode().classList.toggle('hideKeys');
+  getShowKeysLine.currentNode().closest('.piano__show-keys-switcher').classList.toggle('hideKeys');
+}
+
 function createPianoShowKeysSwitcher() {
-  return div(['piano__show-keys-switcher'], div(['piano__show-keys-line']));
+  getShowKeysLine = div(['piano__show-keys-line']);
+  getShowKeysLine.addEvent('click', toggleShowKeys);
+  return div(['piano__show-keys-switcher'], getShowKeysLine);
 }
 function createPianoShowKeys() {
   return div(['piano__show-keys'], createPianoShowKeysSwitcher(), span(['piano__show-keys-text'], 'Show keys'))

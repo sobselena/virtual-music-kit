@@ -37,8 +37,15 @@
     align-items: center;
     justify-content: center;
     gap: 4px;
+
     overflow: hidden;
         width: calc(3 * min((5.8rem * 7 + 4px * 6 + 0.3rem), 100%));
+  }
+  &__key-name {
+       transition: all 0.2s ease-out;  
+  }
+  &__keys.hideKeys .piano__key-name {
+    opacity: 0;
   }
 
   &__octave {

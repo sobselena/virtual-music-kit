@@ -192,7 +192,27 @@
       margin-left: calc(45.6px / 5);
     }
   }
-  &__show-keys-switcher {
+
+  &__show-keys-line {
+    width: 100%;
+    height: 1.6rem;
+    background-color: #fff;
+    height: 6px;
+    border-radius: 10px;
+    box-shadow: 0 1rem 2rem rgba($color: #000000, $alpha: 0.3);
+    @include resize(768px) {
+      height: (4px, 6px, 625px, 768px);
+    }
+    transition: all 1s;
+  }
+
+
+  &__show-keys-text {
+    transition: all 0.4s;
+    white-space: nowrap;
+
+  }
+    &__show-keys-switcher {
     width: sizes(3.2rem, 10.9rem, 768px, 1440px);
     position: relative;
     cursor: pointer;
@@ -204,27 +224,10 @@
       margin-left: 0.8rem;
     }
   }
-  &__show-keys-line {
-    width: 100%;
-    height: 1.6rem;
-    background-color: #fff;
-    height: 6px;
-    border-radius: 10px;
-    box-shadow: 0 1rem 2rem rgba($color: #000000, $alpha: 0.3);
-    @include resize(768px) {
-      height: (4px, 6px, 625px, 768px);
-    }
-  }
-
-  &__show-keys-text {
-    transition: all 0.4s;
-    white-space: nowrap;
-
-  }
-
   &__show-keys-switcher:hover + &__show-keys-text {
     color: #ced4da;
   }
+
   &__show-keys-switcher::before {
     content: '';
     position: absolute;
@@ -236,5 +239,9 @@
     width: sizes(1.4rem, 1.8rem, 625px, 1440px);
     border-radius: 50%;
     background-color: #e9ecef;
+    transition: all 0.2s ease-out;
   }
+   &__show-keys-switcher.hideKeys::before {
+    left: 100%;
+   }
 }
