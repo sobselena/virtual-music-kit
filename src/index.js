@@ -22,7 +22,7 @@ let getShowKeysLine;
 let getPianoKeys;
 let getPianoKeysScroller;
 let getEditInput;
-let getCombinationInput;;
+let getCombinationInput;
 export let getKeyValueContainer;
 
 
@@ -134,6 +134,7 @@ function clickEditBtn() {
     document.querySelector(".piano__current-key-value-error").style.display = 'block';
     return;
   }
+
   const [octaveIndexCur, relativeIndexCur] = findOctaveKeyIndex(curKey);
 
   if (canSwap) {
@@ -153,6 +154,11 @@ function clickEditBtn() {
   if (combinationIsPlaying) return;
   
   document.querySelector('.piano__container').classList.toggle('blocked');
+    if (!document.querySelector('.piano__container').classList.contains('blocked')) {
+    document.querySelector(".piano__current-key-value-error").style.display = 'none';
+  }
+  getCombinationInput.setAttribute('maxlength', Object.values(pianoKeyObj).filter(value => value).length * 2);
+  getCombinationInput.setPlaceholder(pianoKeysPairs[0].filter(([keyName]) => !keyName.includes('#')).map(([, keyValue]) => keyValue).join(''));
 }
 
 function createPianoCurrentKeyContainer() {
@@ -182,8 +188,25 @@ function createPianoCombination() {
     if (event.key === 'Enter') {
       playCombination();
     }
-  getEditInput.setAttribute('pattern', '[a-zA-Z0-9]');
+
   getCombinationInput.setAttribute('maxlength', Object.values(pianoKeyObj).filter(value => value).length * 2);
+  getCombinationInput.addEvent('blur', () => {
+    if (!combinationIsPlaying && !getKeyValueContainer.currentNode().classList.contains('edit')) {
+        document.querySelector('.piano__container').classList.remove('blocked');
+      }
+  });
+  getCombinationInput.addEvent('input', (event) => {
+      const max = Number(getCombinationInput.currentNode().getAttribute('maxlength'));
+    const len = event.currentTarget.value.length;
+    if (len === max) {
+      document.querySelector('.piano__container').classList.add('blocked');
+    } else {
+      if (!combinationIsPlaying && !getKeyValueContainer.currentNode().classList.contains('edit')) {
+        document.querySelector('.piano__container').classList.remove('blocked');
+      }
+    }
+  })
+
   })
   return div(['piano__combination'], getCombinationInput , button(['piano__play-btn'], 'Play', playCombination))
 }

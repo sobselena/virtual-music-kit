@@ -34,7 +34,7 @@ export class PianoKeys extends Component {
      }
   }
   clickPianoKey(combinationKey) {
-      if (getKeyValueContainer.currentNode().classList.contains('edit')) return;
+      if (document.querySelector('.piano__container').classList.contains('blocked') && getKeyValueContainer.currentNode().classList.contains('edit')) return;
       const keyValue = combinationKey || this.getFirstPressedKey();
       const keyName =  Object.keys(pianoKeyObj).find(pianoKeyName =>pianoKeyObj[pianoKeyName] === keyValue);
       if (!keyValue) return;
