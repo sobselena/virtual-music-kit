@@ -289,7 +289,7 @@ let scale;
 function calcScale() {
   const piano = document.querySelector('.piano');
   const scroller = getPianoKeysScroller.currentNode().querySelector('.piano__octave-scroller');
-  scale = 3 * Math.min(piano.getBoundingClientRect().width / getPianoKeys.currentNode().getBoundingClientRect().width, 1);
+  scale = pianoKeysPairs.length * Math.min(piano.getBoundingClientRect().width / getPianoKeys.currentNode().getBoundingClientRect().width, 1);
   scroller.style.transform = `translateX(${coords.curTransform}px) scaleX(${scale})`;
 }
 
