@@ -197,8 +197,17 @@ function createPianoCombination() {
       }
   });
   getCombinationInput.addEvent('input', (event) => {
-      const max = Number(getCombinationInput.currentNode().getAttribute('maxlength'));
-    const len = event.currentTarget.value.length;
+    const max = Number(getCombinationInput.currentNode().getAttribute('maxlength'));
+    let keys = event.currentTarget.value;
+    const len = keys.length;
+
+     keys = keys.replace(/./g, keyValue => {
+        if (Object.keys(pianoKeyObj).find(pianoKeyName =>pianoKeyObj[pianoKeyName] === keyValue)) {
+          return keyValue;
+        }
+        return '';
+    });
+    event.currentTarget.value = keys;
     if (len === max) {
       document.querySelector('.piano__container').classList.add('blocked');
     } else {

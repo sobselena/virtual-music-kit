@@ -1,5 +1,4 @@
 import { Component } from "./Component.js";
-
 export class Input extends Component {
   constructor({classes = [], type = 'text'}) {
     super({tag: 'input', classes});
@@ -13,7 +12,6 @@ export class Input extends Component {
       let keyValue = this.currentNode().value.toLowerCase();
       keyValue = keyValue.replace(/[а-яё]/g, char => layoutMap[char]);
       keyValue = keyValue.replace(/[^a-z0-9]/, '');
-
       this.currentNode().value = keyValue;
 
     })
